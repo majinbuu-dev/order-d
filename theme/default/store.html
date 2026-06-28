@@ -354,13 +354,13 @@
     }
     function confirmBook() {
       const phone = document.getElementById('book-phone').value.trim();
-      if (!phone) { alert('Vui lòng nhập số điện thoại'); return; }
-      alert('Đặt bàn thành công!\n' + ORDERD.store.name + ' sẽ gọi xác nhận trong ít phút.');
+      if (!phone) { showToast('Vui lòng nhập số điện thoại'); return; }
+      showToast('Đặt bàn thành công!\n' + ORDERD.store.name + ' sẽ gọi xác nhận trong ít phút.');
       closeBookModal();
     }
 
     function scanQR() {
-      alert('Tính năng quét mã QR sẽ sớm ra mắt!');
+      showToast('Tính năng quét mã QR sẽ sớm ra mắt!');
     }
 
     function doCheckin() {

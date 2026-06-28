@@ -140,10 +140,9 @@
 
     function placeOrder(e) {
       e.preventDefault();
-      localStorage.removeItem('orderd_cart');
+      const totalText = document.getElementById('total').textContent; const count = cart.reduce((s,c) => s + c.qty, 0); const totalVal = cart.reduce((s,c) => s + c.price*c.qty, 0); localStorage.setItem('orderd_confirm', JSON.stringify({ items: count, total: totalVal })); localStorage.removeItem('orderd_cart');
       const msg = paymentMethod === 'cod' ? 'Thanh toán tiền mặt khi nhận hàng' : 'Thanh toán chuyển khoản';
-      alert('Đặt hàng thành công!\n' + msg);
-      window.location.href = 'menu.html';
+      window.location.href = 'confirm.html';
     }
   </script>
 </body>

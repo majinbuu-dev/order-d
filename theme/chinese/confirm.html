@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>锦绣楼 — Đặt Hàng Thành Công</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme: { extend: { fontFamily: { display: ['"Playfair Display"', 'Georgia', 'serif'], body: ['Inter', 'system-ui', 'sans-serif'] } } } }</script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .pop-in { animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+    .fade-up { animation: fadeUp 0.5s ease-out forwards; opacity: 0; }
+  </style>
+</head>
+<body class="bg-[#fef9f4] text-[#2d1810] font-body antialiased min-h-screen flex flex-col items-center justify-center px-6">
+
+  <div class="text-center max-w-sm">
+    <div class="text-5xl mb-4 pop-in">🏮</div>
+    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 pop-in" style="animation-delay:0.05s">
+      <svg class="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+    </div>
+
+    <h1 class="font-display text-3xl font-bold text-red-900 mb-2 fade-up" style="animation-delay:0.15s">Đặt hàng thành công!</h1>
+    <p class="text-stone-500 mb-6 fade-up" style="animation-delay:0.25s">Cảm ơn bạn đã đặt hàng tại <span class="font-semibold text-red-700 store-name">锦绣楼</span>. Chúng tôi sẽ chuẩn bị món ngay!</p>
+
+    <div class="bg-white rounded-2xl p-5 border border-red-100 shadow-sm text-left mb-6 fade-up" style="animation-delay:0.35s">
+      <h3 class="font-semibold text-sm text-red-400 mb-3">Thông tin đơn hàng</h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between"><span class="text-stone-500">Mã đơn</span><span class="font-medium" id="order-id">#ORD-...</span></div>
+        <div class="flex justify-between"><span class="text-stone-500">Số món</span><span class="font-medium" id="order-items-count">0</span></div>
+        <div class="flex justify-between pt-2 border-t border-red-100"><span class="text-stone-500">Tổng tiền</span><span class="font-bold text-lg text-red-700" id="order-total">0đ</span></div>
+      </div>
+    </div>
+
+    <a href="menu.html" class="block w-full py-3.5 bg-red-700 text-white font-semibold rounded-2xl hover:bg-red-800 transition-colors fade-up" style="animation-delay:0.45s">Tiếp tục đặt món</a>
+    <a href="store.html" class="block text-center text-sm text-red-400 mt-3 fade-up" style="animation-delay:0.5s">← Về trang cửa hàng</a>
+  </div>
+
+  <script src="../../data/store.js"></script>
+  <script>
+    const data = JSON.parse(localStorage.getItem('orderd_confirm') || '{}');
+    document.getElementById('order-items-count').textContent = (data.items || 0) + ' món';
+    document.getElementById('order-total').textContent = formatVND(data.total || 0);
+    document.getElementById('order-id').textContent = '#ORD-' + Date.now().toString(36).toUpperCase();
+    document.querySelectorAll('.store-name').forEach(el => el.textContent = ORDERD.store.name);
+    localStorage.removeItem('orderd_confirm');
+    function formatVND(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ'; }
+  </script>
+</body>
+</html>
