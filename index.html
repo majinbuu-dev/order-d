@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>OrderD — Chọn Theme</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            body: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    .btn-scale:active { transform: scale(0.97); }
+    .fade-in { animation: fadeIn 0.5s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="bg-[#fafaf9] text-[#1c1917] font-body antialiased min-h-screen flex flex-col items-center justify-center px-6">
+
+  <div class="text-center mb-10 fade-in">
+    <h1 class="font-display text-5xl font-bold tracking-tight mb-2">OrderD</h1>
+    <p class="text-stone-400 text-sm">Digital Menu Platform</p>
+  </div>
+
+  <div class="w-full max-w-sm space-y-3 fade-in" style="animation-delay:0.1s">
+    <p class="text-xs text-stone-400 uppercase tracking-widest text-center mb-4">Chọn Theme</p>
+
+    <a href="theme/default/menu.html" onclick="clearStorage()" class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group">
+      <div class="w-12 h-12 bg-stone-900 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      </div>
+      <div class="flex-1 text-left">
+        <p class="font-semibold">Default</p>
+        <p class="text-stone-400 text-xs">Thiết kế mặc định — tối giản, sang trọng</p>
+      </div>
+      <svg class="w-5 h-5 text-stone-300 group-hover:text-stone-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="theme/chinese/menu.html" onclick="clearStorage()" class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group">
+      <div class="w-12 h-12 bg-red-700 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+        <span class="text-white font-display text-lg">锦</span>
+      </div>
+      <div class="flex-1 text-left">
+        <p class="font-semibold">锦绣楼 <span class="text-xs text-red-500 font-normal">Chinese</span></p>
+        <p class="text-stone-400 text-xs">Phong cách Trung Hoa — đỏ vàng phương Đông</p>
+      </div>
+      <svg class="w-5 h-5 text-stone-300 group-hover:text-stone-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="theme/japan/menu.html" onclick="clearStorage()" class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group">
+      <div class="w-12 h-12 bg-indigo-700 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+        <span class="text-white font-display text-lg">桜</span>
+      </div>
+      <div class="flex-1 text-left">
+        <p class="font-semibold">桜亭 <span class="text-xs text-indigo-500 font-normal">Japan</span></p>
+        <p class="text-stone-400 text-xs">Phong cách Nhật Bản — tối giản, thiền vị</p>
+      </div>
+      <svg class="w-5 h-5 text-stone-300 group-hover:text-stone-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="theme/vintage/menu.html" onclick="clearStorage()" class="flex items-center gap-4 p-4 bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group">
+      <div class="w-12 h-12 bg-[#5d4037] rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+        <span class="text-white font-serif italic text-lg">L</span>
+      </div>
+      <div class="flex-1 text-left">
+        <p class="font-semibold">Le Petit <span class="text-xs text-[#8d6e63] font-normal">Vintage</span></p>
+        <p class="text-stone-400 text-xs">Phong cách Châu Âu cổ điển — ấm áp, lãng mạn</p>
+      </div>
+      <svg class="w-5 h-5 text-stone-300 group-hover:text-stone-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </a>
+
+    <div class="flex items-center gap-4 p-4 bg-white/50 rounded-2xl border border-dashed border-stone-200 opacity-50">
+      <div class="w-12 h-12 bg-stone-200 rounded-xl flex items-center justify-center">
+        <svg class="w-5 h-5 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+      </div>
+      <div class="flex-1 text-left">
+        <p class="font-semibold text-stone-400">Thêm Theme Mới</p>
+        <p class="text-stone-300 text-xs">Tạo theme tuỳ chỉnh của bạn</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-stone-300 text-xs mt-10 fade-in" style="animation-delay:0.2s">
+    Thêm theme mới bằng cách tạo thư mục trong <code class="text-stone-400">theme/</code>
+  </p>
+
+  <script>
+    function clearStorage() { localStorage.clear(); sessionStorage.clear(); }
+  </script>
+
+</body>
+</html>
