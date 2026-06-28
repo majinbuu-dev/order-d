@@ -88,7 +88,8 @@
     </div>
     <div id="cart-items" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
     <div id="cart-footer" class="border-t border-[#d7ccc8] px-5 py-4 space-y-3 flex-shrink-0 hidden">
-      <div class="flex justify-between text-sm text-stone-500"><span>Subtotal</span><span id="subtotal">0đ</span></div>
+      <div class="flex justify-between text-sm text-stone-500"><span>Tạm tính</span><span id="subtotal">0đ</span></div>
+      <div class="flex justify-between text-sm text-stone-500"><span>VAT (10%)</span><span id="vat-amount">0đ</span></div>
       <div class="flex justify-between text-base font-semibold pt-2 border-t border-[#d7ccc8]"><span>Total</span><span id="total" class="text-lg text-[#5d4037]">0đ</span></div>
       <button onclick="goToCheckout()" class="w-full py-3 bg-[#5d4037] hover:bg-[#4e342e] text-white font-semibold rounded-xl btn-scale">Thanh toán — <span id="drawer-total">0đ</span></button>
     </div>
@@ -163,6 +164,7 @@
       itemsEl.innerHTML = cart.map(c=>{const m=ORDERD.items.find(x=>x.id===c.id);if(!m)return '';return`<div class="flex gap-3 items-center"><img src="${m.img}" class="w-12 h-12 rounded-xl object-cover" /><div class="flex-1 min-w-0"><h4 class="font-medium text-sm truncate">${m.name}</h4><p class="text-[#c8a165] text-xs">${formatVND(m.price)}</p></div><div class="flex items-center gap-1 bg-[#efebe9] rounded-full p-0.5"><button onclick="update('${m.id}',-1)" class="w-6 h-6 flex items-center justify-center rounded-full bg-white text-[#5d4037] btn-scale text-xs font-bold">−</button><span class="w-6 text-center text-sm font-semibold">${c.qty}</span><button onclick="update('${m.id}',1)" class="w-6 h-6 flex items-center justify-center rounded-full bg-[#5d4037] text-white btn-scale text-xs font-bold">+</button></div><button onclick="removeFromCart('${m.id}')" class="p-1 text-stone-300 hover:text-red-400 btn-scale"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`}).join('');
       const sub = cart.reduce((s,c)=>{const m=ORDERD.items.find(x=>x.id===c.id);return s+(m?m.price*c.qty:0)},0), tax=Math.round(sub*0.10*100)/100, totalAll=Math.round((sub+tax)*100)/100;
       document.getElementById('subtotal').textContent = formatVND(sub);
+      document.getElementById('vat-amount').textContent = formatVND(tax);
       document.getElementById('total').textContent = formatVND(totalAll);
       document.getElementById('drawer-total').textContent = formatVND(totalAll);
       footerEl.classList.remove('hidden');

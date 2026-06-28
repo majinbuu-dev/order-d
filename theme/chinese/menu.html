@@ -118,6 +118,7 @@
 
     <div id="cart-footer" class="border-t border-red-100 px-5 py-4 space-y-3 flex-shrink-0 hidden">
       <div class="flex justify-between text-sm text-stone-500"><span>Tạm tính</span><span id="subtotal">0đ</span></div>
+      <div class="flex justify-between text-sm text-stone-500"><span>VAT (10%)</span><span id="vat-amount">0đ</span></div>
       <div class="flex justify-between text-base font-semibold pt-2 border-t border-red-100">
         <span>Tổng cộng</span><span id="total" class="text-lg text-red-700">0đ</span>
       </div>
@@ -231,6 +232,7 @@
       const tax = Math.round(subtotal*0.10*100)/100;
       const totalAll = Math.round((subtotal+tax)*100)/100;
       document.getElementById('subtotal').textContent = formatVND(subtotal);
+      document.getElementById('vat-amount').textContent = formatVND(tax);
       document.getElementById('total').textContent = formatVND(totalAll);
       document.getElementById('drawer-total-btn').textContent = formatVND(totalAll);
       footerEl.classList.remove('hidden');

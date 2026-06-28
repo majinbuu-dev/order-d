@@ -47,6 +47,7 @@
 
         <div class="border-t border-red-100 mt-4 pt-4 space-y-2 text-sm">
           <div class="flex justify-between"><span class="text-stone-500">Tạm tính</span><span id="subtotal">0đ</span></div>
+          <div class="flex justify-between"><span class="text-stone-500">VAT (10%)</span><span id="vat-amount">0đ</span></div>
           <div class="flex justify-between font-bold pt-2 border-t border-red-100 text-lg"><span>Tổng</span><span id="total" class="text-xl text-red-700">0đ</span></div>
         </div>
 
@@ -86,6 +87,7 @@
         </div>` }).join('');
       const tax = Math.round(sub * 0.10 * 100) / 100, total = Math.round((sub + tax) * 100) / 100;
       document.getElementById('subtotal').textContent = formatVND(sub);
+      document.getElementById('vat-amount').textContent = formatVND(tax);
       document.getElementById('total').textContent = formatVND(total);
       document.getElementById('btn-total').textContent = formatVND(total);
     }
