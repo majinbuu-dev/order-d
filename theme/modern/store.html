@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>OrderD — Cửa Hàng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --surface: #ffffff;
+      --border: #e8e8e8;
+      --text: #0a0a0a;
+      --text-secondary: #737373;
+      --primary: #0a0a0a;
+      --primary-hover: #262626;
+      --accent: #636363;
+      --accent-light: #f5f5f5;
+    }
+    [data-theme="ocean"] {
+      --bg: #f4f6f9;
+      --bg-secondary: #e8ecf2;
+      --surface: #ffffff;
+      --border: #d3dae5;
+      --text: #1e2d44;
+      --text-secondary: #506380;
+      --primary: #213555;
+      --primary-hover: #152238;
+      --accent: #5a7ba6;
+      --accent-light: #e8ecf2;
+    }
+    [data-theme="sunset"] {
+      --bg: #f9f6f3;
+      --bg-secondary: #f0e9e2;
+      --surface: #ffffff;
+      --border: #e2d5c6;
+      --text: #4a3728;
+      --text-secondary: #6b5240;
+      --primary: #5c3d2e;
+      --primary-hover: #3e2518;
+      --accent: #c4956a;
+      --accent-light: #f0e9e2;
+    }
+    [data-theme="forest"] {
+      --bg: #f5f8f3;
+      --bg-secondary: #e9efe4;
+      --surface: #ffffff;
+      --border: #d2dcc8;
+      --text: #2d3b24;
+      --text-secondary: #4a5a3e;
+      --primary: #34472a;
+      --primary-hover: #1f2e18;
+      --accent: #718c5a;
+      --accent-light: #e9efe4;
+    }
+
+    body { background: var(--bg); color: var(--text); }
+
+    .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .btn-scale:active { transform: scale(0.95); transition: transform 0.1s; }
+
+    .tab-item { position: relative; }
+    .tab-item.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: var(--primary); border-radius: 2px 2px 0 0; }
+
+    .quick-action { transition: all 0.2s; }
+
+    .fade-in { animation: fadeIn 0.4s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .ani-fade-up { animation: fadeUp 0.5s ease-out both; }
+    .ani-scale-in { animation: scaleIn 0.4s ease-out both; }
+    .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.1s; } .d3 { animation-delay: 0.18s; }
+    .d4 { animation-delay: 0.26s; } .d5 { animation-delay: 0.34s; }
+
+    @keyframes slideInRight { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideInLeft { from { transform: translateX(-30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(-30px); opacity: 0; } }
+    @keyframes slideOutLeft { from { transform: translateX(0); opacity: 1; } to { transform: translateX(30px); opacity: 0; } }
+
+    .tab-slide-in-right { animation: slideInRight 0.25s ease-out both; }
+    .tab-slide-in-left { animation: slideInLeft 0.25s ease-out both; }
+    .tab-slide-out-right { animation: slideOutRight 0.25s ease-out both; pointer-events: none; }
+    .tab-slide-out-left { animation: slideOutLeft 0.25s ease-out both; pointer-events: none; }
+
+    .pulse-dot { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .fav-active { color: #ef4444; fill: #ef4444; }
+    .menu-fab { transition: transform 0.3s ease; }
+    .menu-fab:hover { transform: scale(1.08); }
+    .menu-fab:active { transform: scale(0.95); }
+
+    .theme-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .theme-dot.active { border-color: var(--text); transform: scale(1.15); }
+    .theme-dot:hover { transform: scale(1.1); }
+
+    .theme-picker-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .theme-picker-btn:hover { transform: scale(1.1); }
+
+    .theme-dropdown {
+      position: absolute; top: 44px; right: -8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 8px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      display: none; z-index: 60;
+      flex-direction: column; gap: 6px;
+    }
+    .theme-dropdown.open { display: flex; }
+  </style>
+</head>
+<body class="font-body antialiased">
+
+  <!-- TOAST -->
+  <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[100] pointer-events-none opacity-0 -translate-y-2 transition-all duration-300">
+    <div class="flex items-center gap-2 px-4 py-2.5 text-white text-sm rounded-full shadow-lg whitespace-nowrap" style="background:var(--primary)">
+      <span id="toast-icon"></span>
+      <span id="toast-msg"></span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 glass border-b" style="border-color:var(--border)">
+    <div class="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="menu.html" class="p-2 -ml-2 btn-scale">
+        <svg class="w-5 h-5" style="color:var(--text-secondary)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </a>
+      <h1 class="text-lg font-bold tracking-tight truncate store-name">OrderD</h1>
+      <div class="flex items-center gap-1">
+        <div class="relative">
+          <button id="theme-picker-btn" class="theme-picker-btn" onclick="toggleThemePicker()" title="Đổi màu"></button>
+          <div id="theme-dropdown" class="theme-dropdown">
+            <div class="flex gap-2">
+              <button class="theme-dot active" data-theme="monochrome" style="background:#0a0a0a" onclick="setTheme('monochrome')"></button>
+              <button class="theme-dot" data-theme="ocean" style="background:#213555" onclick="setTheme('ocean')"></button>
+              <button class="theme-dot" data-theme="sunset" style="background:#5c3d2e" onclick="setTheme('sunset')"></button>
+              <button class="theme-dot" data-theme="forest" style="background:#34472a" onclick="setTheme('forest')"></button>
+            </div>
+          </div>
+        </div>
+        <button id="fav-btn" onclick="toggleFav()" class="p-2 -mr-2 btn-scale">
+          <svg class="w-5 h-5" style="color:var(--text-secondary)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-lg mx-auto">
+
+    <!-- COVER + STATUS -->
+    <div class="relative h-56 overflow-hidden rounded-b-3xl ani-fade-up d1">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80" alt="" class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+      <div class="absolute top-4 left-4">
+        <a href="menu.html" class="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full text-xs font-semibold btn-scale shadow-lg" style="color:var(--primary)">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 6h18M3 18h18"/></svg>
+          Menu
+        </a>
+      </div>
+      <div class="absolute top-4 right-4">
+        <span id="status-badge" class="px-3 py-1.5 text-white text-xs font-semibold rounded-full flex items-center gap-1.5" style="background:var(--primary)">
+          <span class="w-2 h-2 bg-white/80 rounded-full pulse-dot"></span> Đang mở cửa
+        </span>
+      </div>
+      <div class="absolute bottom-4 left-4 right-4">
+        <div class="flex items-end justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-white store-name">OrderD</h2>
+            <p class="text-white/70 text-sm mt-0.5">Ẩm thực Việt · Tinh hoa từ bếp nhà</p>
+          </div>
+          <div class="flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-2.5 py-1">
+            <svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <span class="text-white font-semibold text-sm store-rating">4.8</span>
+            <span class="text-white/60 text-xs store-review-count">(256)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS ROW -->
+    <div class="px-4 py-3 flex items-center gap-6 text-sm border-b ani-fade-up d2" style="border-color:var(--border);background:var(--surface)">
+      <div class="text-center">
+        <p class="font-bold store-rating">4.8</p>
+        <p class="text-xs" style="color:var(--text-secondary)">Đánh giá</p>
+      </div>
+      <div class="text-center">
+        <p class="font-bold" id="view-count">12.4k</p>
+        <p class="text-xs" style="color:var(--text-secondary)">Lượt xem</p>
+      </div>
+      <div class="text-center">
+        <p class="font-bold store-checkin-count" id="checkin-count">1.2k</p>
+        <p class="text-xs" style="color:var(--text-secondary)">Check-in</p>
+      </div>
+      <button onclick="doCheckin()" class="ml-auto px-4 py-1.5 text-white text-sm font-semibold rounded-full btn-scale" style="background:var(--accent)">
+        + Check in
+      </button>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="px-4 py-4 border-b flex items-center gap-2.5 ani-fade-up d3" style="border-color:var(--border);background:var(--surface)">
+        <button onclick="window.location.href='tel:'+ORDERD.store.phone" class="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium btn-scale flex-shrink-0" style="background:var(--primary);color:#fff">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Gọi
+        </button>
+        <button onclick="bookTable()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium btn-scale flex-shrink-0" style="background:var(--primary);color:#fff">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Bàn
+        </button>
+        <div class="flex flex-col items-end gap-0.5 ml-auto flex-shrink-0">
+          <span class="text-[10px]" style="color:var(--text-secondary);opacity:0.6">Giờ mở cửa</span>
+          <span class="text-xs font-semibold store-hours" style="color:var(--text)">10:00 — 22:00</span>
+        </div>
+      </div>
+
+    <!-- ADDRESS BAR -->
+    <div class="px-4 py-3 border-b flex items-center gap-3 ani-fade-up d4" style="background:var(--surface);border-color:var(--border)">
+      <svg class="w-4 h-4 flex-shrink-0" style="color:var(--text-secondary);opacity:0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium truncate store-address">123 Nguyễn Huệ, Quận 1, TP. HCM</p>
+        <p class="text-xs flex items-center gap-1" style="color:var(--text-secondary)"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Cách bạn 1.2 km</p>
+      </div>
+      <button onclick="openDirections()" class="flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-full btn-scale flex-shrink-0" style="background:var(--bg-secondary);color:var(--text-secondary)">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        Chỉ đường
+      </button>
+    </div>
+
+    <!-- TABS -->
+    <div class="sticky top-14 z-40 border-b ani-fade-up d5" style="background:var(--surface);border-color:var(--border)">
+      <div id="tab-nav" class="flex max-w-lg mx-auto">
+        <button class="tab-item active flex-1 py-3 text-sm font-medium" style="color:var(--text)" data-tab="photos">Ảnh</button>
+        <button class="tab-item flex-1 py-3 text-sm font-medium" style="color:var(--text-secondary)" data-tab="reviews">Đánh giá</button>
+        <button class="tab-item flex-1 py-3 text-sm font-medium" style="color:var(--text-secondary)" data-tab="about">Giới thiệu</button>
+        <button class="tab-item flex-1 py-3 text-sm font-medium" style="color:var(--text-secondary)" data-tab="discover">Khám phá</button>
+      </div>
+    </div>
+
+    <!-- TAB: ẢNH -->
+    <div id="tab-photos" class="px-4 py-5 space-y-4 tab-content">
+      <div id="store-gallery" class="grid grid-cols-3 gap-2"></div>
+    </div>
+
+    <!-- TAB: ĐÁNH GIÁ -->
+    <div id="tab-reviews" class="px-4 py-5 space-y-5 hidden tab-content">
+      <div class="rounded-2xl p-5 border" style="background:var(--surface);border-color:var(--border)">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="text-center">
+            <p class="text-4xl font-bold store-rating">4.8</p>
+            <div class="flex items-center justify-center gap-0.5 mt-1">
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <p class="text-xs mt-1" style="color:var(--text-secondary)"><span class="store-review-count">256</span> đánh giá</p>
+          </div>
+          <div id="store-rating-bars" class="flex-1 space-y-1.5"></div>
+        </div>
+      </div>
+
+      <div id="store-reviews" class="space-y-3"></div>
+
+      <button class="w-full py-3 border-2 font-medium rounded-2xl btn-scale" style="border-color:var(--border);color:var(--text)">
+        Xem tất cả <span class="store-review-count">256</span> đánh giá
+      </button>
+    </div>
+
+    <!-- TAB: GIỚI THIỆU -->
+    <div id="tab-about" class="px-4 py-5 space-y-3 hidden tab-content">
+      <div class="rounded-2xl p-4 border" style="background:var(--surface);border-color:var(--border)">
+        <p class="text-sm leading-relaxed mb-4 store-description" style="color:var(--text-secondary)">OrderD ra đời với sứ mệnh mang hương vị Việt Nam đích thực đến từng bữa ăn. Nguyên liệu tươi mỗi ngày, công thức gia truyền, đầu bếp lành nghề.</p>
+        <div class="mt-3 pt-3" style="border-top:1px solid var(--border)">
+          <div id="store-amenities" class="flex flex-wrap gap-1.5"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: KHÁM PHÁ -->
+    <div id="tab-discover" class="px-4 py-5 hidden tab-content">
+      <div id="store-discover" class="space-y-6"></div>
+    </div>
+
+  <!-- DISCOVER DETAIL MODAL -->
+  <div id="discover-modal" class="fixed inset-0 z-[65] hidden flex items-end sm:items-center justify-center">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeDiscoverModal()"></div>
+    <div class="relative w-full sm:max-w-sm max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl discover-sheet" style="background:var(--surface)">
+      <button onclick="closeDiscoverModal()" class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-sm text-white btn-scale">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="relative aspect-[16/9] overflow-hidden rounded-t-3xl sm:rounded-t-3xl">
+        <img id="disc-img" src="" alt="" class="w-full h-full object-cover" />
+      </div>
+      <div class="px-5 py-4 space-y-3">
+        <span id="disc-tag" class="inline-block text-xs font-medium px-2.5 py-1 rounded-full" style="background:var(--accent-light);color:var(--accent)"></span>
+        <h2 id="disc-title" class="text-xl font-bold"></h2>
+        <p class="text-sm leading-relaxed" style="color:var(--text-secondary)">OrderD không ngừng mang đến những trải nghiệm ẩm thực mới mẻ. Hãy theo dõi để cập nhật những món ngon và sự kiện đặc biệt sắp tới.</p>
+        <div class="flex items-center gap-3 text-xs pt-1 border-t" style="color:var(--text-secondary);border-color:var(--border)">
+          <span id="disc-time"></span>
+          <span>·</span>
+          <span id="disc-views"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHOTO LIGHTBOX -->
+  <div id="lightbox" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/95" onclick="closeLightbox()">
+    <button class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white btn-scale backdrop-blur-sm">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <button id="lb-prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white btn-scale backdrop-blur-sm" onclick="event.stopPropagation();lightboxNav(-1)">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button id="lb-next" class="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white btn-scale backdrop-blur-sm" onclick="event.stopPropagation();lightboxNav(1)">
+      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <img id="lb-img" src="" alt="" class="max-w-full max-h-[85vh] object-contain select-none" onclick="event.stopPropagation()" style="animation: fadeIn 0.3s ease-out" />
+    <div id="lb-counter" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-sm font-medium"></div>
+  </div>
+
+  <!-- BOOK TABLE MODAL -->
+  <div id="book-modal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center">
+    <div class="absolute inset-0 bg-black/50" onclick="closeBookModal()"></div>
+    <div class="relative w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl p-6 animate-[slideUp_0.3s_ease-out]" style="background:var(--surface)">
+      <h3 class="text-xl font-bold mb-4">Đặt Bàn</h3>
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs mb-1 block" style="color:var(--text-secondary)">Ngày</label>
+          <input type="date" id="book-date" class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2" style="background:var(--bg-secondary);border-color:var(--border);color:var(--text)" />
+        </div>
+        <div>
+          <label class="text-xs mb-1 block" style="color:var(--text-secondary)">Giờ</label>
+          <select id="book-time" class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2" style="background:var(--bg-secondary);border-color:var(--border);color:var(--text)">
+            <option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs mb-1 block" style="color:var(--text-secondary)">Số người</label>
+          <select id="book-guests" class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2" style="background:var(--bg-secondary);border-color:var(--border);color:var(--text)">
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8+</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs mb-1 block" style="color:var(--text-secondary)">Số điện thoại</label>
+          <input type="tel" id="book-phone" placeholder="0901234567" class="w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2" style="background:var(--bg-secondary);border-color:var(--border);color:var(--text)" />
+        </div>
+        <button onclick="confirmBook()" class="w-full py-3 text-white font-semibold rounded-xl btn-scale mt-2" style="background:var(--primary)">Xác nhận đặt bàn</button>
+        <button onclick="closeBookModal()" class="w-full py-2 text-sm" style="color:var(--text-secondary)">Huỷ</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @keyframes slideDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
+    .modal-open .discover-sheet { animation: slideUp 0.35s ease-out both; }
+    .modal-close .discover-sheet { animation: slideDown 0.25s ease-in both; }
+  </style>
+
+  <script src="../../data/store.js"></script>
+  <script>
+    (function initStore() {
+      document.querySelectorAll('.store-name').forEach(el => el.textContent = ORDERD.store.name);
+      document.querySelectorAll('.store-address').forEach(el => el.textContent = ORDERD.store.address);
+      document.querySelectorAll('.store-rating').forEach(el => el.textContent = ORDERD.store.rating);
+      document.querySelectorAll('.store-review-count').forEach(el => el.textContent = ORDERD.store.reviewCount);
+      document.querySelectorAll('.store-checkin-count').forEach(el => el.textContent = ORDERD.store.checkinCount);
+      document.querySelectorAll('.store-dish-count').forEach(el => el.textContent = ORDERD.store.stats.dishCount);
+      document.querySelectorAll('.store-prep-time').forEach(el => el.textContent = ORDERD.store.stats.prepTime);
+      document.querySelectorAll('.store-tables').forEach(el => el.textContent = ORDERD.store.stats.tables);
+      document.querySelectorAll('.store-description').forEach(el => el.textContent = ORDERD.store.description);
+      document.querySelectorAll('.store-hours').forEach(el => el.textContent = ORDERD.store.openHour + ':00 — ' + ORDERD.store.closeHour + ':00');
+
+      const dEl = document.getElementById('store-discover');
+      if (dEl) dEl.innerHTML = ORDERD.store.discover.map((p, i) => `
+        <div class="rounded-2xl overflow-hidden border cursor-pointer hover:shadow-md transition-shadow" style="background:var(--surface);border-color:var(--border)" onclick="openDiscoverModal(${i})">
+          <img src="${p.img}" class="w-full h-44 object-cover" />
+          <div class="p-4">
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full" style="background:var(--accent-light);color:var(--accent)">${p.tag}</span>
+            <h3 class="font-semibold mt-2 mb-1">${p.title}</h3>
+            <div class="flex items-center gap-3 mt-3 text-xs" style="color:var(--text-secondary)">
+              <span>${p.time}</span>
+              <span>·</span>
+              <span>${p.views} lượt xem</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      const gEl = document.getElementById('store-gallery');
+      if (gEl) gEl.innerHTML = ORDERD.store.gallery.map((url, i) => `<img src="${url}" class="rounded-xl aspect-square object-cover w-full cursor-pointer hover:opacity-90 transition-opacity" onclick="openLightbox(${i})" />`).join('');
+
+      const rEl = document.getElementById('store-reviews');
+      if (rEl) rEl.innerHTML = ORDERD.store.reviews.map(r => `
+        <div class="rounded-2xl p-4 border" style="background:var(--surface);border-color:var(--border)">
+          <div class="flex items-start gap-3 mb-3">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0" style="background:var(--accent-light);color:var(--accent)">${r.initials}</div>
+            <div>
+              <p class="font-medium text-sm">${r.name}</p>
+              <div class="flex gap-0.5 mt-0.5 text-yellow-400 text-xs">${'★'.repeat(r.stars)}</div>
+            </div>
+            <span class="text-xs ml-auto" style="color:var(--text-secondary)">${r.time}</span>
+          </div>
+          <p class="text-sm leading-relaxed" style="color:var(--text-secondary)">${r.text}</p>
+        </div>
+      `).join('');
+
+      const aEl = document.getElementById('store-amenities');
+      if (aEl) aEl.innerHTML = ORDERD.store.amenities.map(a => `<span class="px-2.5 py-1 rounded-full text-xs" style="background:var(--bg-secondary);color:var(--text-secondary)">${a}</span>`).join('');
+
+      const rbEl = document.getElementById('store-rating-bars');
+      if (rbEl) rbEl.innerHTML = ORDERD.store.ratingBreakdown.map(b => `
+        <div class="flex items-center gap-2"><span class="text-xs w-3" style="color:var(--text-secondary)">${b.stars}</span><div class="flex-1 h-2 rounded-full overflow-hidden" style="background:var(--bg-secondary)"><div class="h-full bg-yellow-400 rounded-full" style="width:${b.pct}%"></div></div><span class="text-xs w-6" style="color:var(--text-secondary)">${b.pct}%</span></div>
+      `).join('');
+    })();
+
+    function toggleThemePicker() {
+      document.getElementById('theme-dropdown').classList.toggle('open');
+    }
+    document.addEventListener('click', (e) => {
+      const dd = document.getElementById('theme-dropdown');
+      const btn = document.getElementById('theme-picker-btn');
+      if (dd && btn && !btn.contains(e.target)) dd.classList.remove('open');
+    });
+
+    function setTheme(name) {
+      document.documentElement.setAttribute('data-theme', name);
+      localStorage.setItem('orderd_modern_theme', name);
+      document.querySelectorAll('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.theme === name));
+      const btn = document.getElementById('theme-picker-btn');
+      const root = getComputedStyle(document.documentElement);
+      btn.style.background = root.getPropertyValue('--primary').trim();
+      document.getElementById('theme-dropdown').classList.remove('open');
+    }
+
+    (function initTheme() {
+      const saved = localStorage.getItem('orderd_modern_theme') || 'monochrome';
+      setTheme(saved);
+    })();
+
+    let isFav = false;
+
+    function toggleFav() {
+      isFav = !isFav;
+      const btn = document.getElementById('fav-btn');
+      const svg = btn.querySelector('svg');
+      if (isFav) {
+        svg.classList.add('fav-active');
+        svg.setAttribute('fill', '#ef4444');
+        svg.setAttribute('stroke', '#ef4444');
+        showToast('Đã thêm vào yêu thích', '<svg class="w-4 h-4 text-red-400" fill="#ef4444" viewBox="0 0 24 24" stroke="#ef4444" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>');
+      } else {
+        svg.classList.remove('fav-active');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        showToast('Đã bỏ yêu thích', '<svg class="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>');
+      }
+    }
+
+    function openDirections() {
+      window.open('https://maps.google.com/?q=' + encodeURIComponent(ORDERD.store.address), '_blank');
+    }
+
+    function bookTable() {
+      document.getElementById('book-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeBookModal() {
+      document.getElementById('book-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+    function confirmBook() {
+      const phone = document.getElementById('book-phone').value.trim();
+      if (!phone) { showToast('Vui lòng nhập số điện thoại'); return; }
+      showToast('Đặt bàn thành công!\n' + ORDERD.store.name + ' sẽ gọi xác nhận trong ít phút.');
+      closeBookModal();
+    }
+
+    function openDiscoverModal(idx) {
+      const p = ORDERD.store.discover[idx];
+      if (!p) return;
+      document.getElementById('disc-img').src = p.img;
+      document.getElementById('disc-tag').textContent = p.tag;
+      document.getElementById('disc-title').textContent = p.title;
+      document.getElementById('disc-time').textContent = p.time;
+      document.getElementById('disc-views').textContent = p.views + ' lượt xem';
+      const modal = document.getElementById('discover-modal');
+      modal.classList.remove('hidden', 'modal-close');
+      modal.classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDiscoverModal() {
+      const modal = document.getElementById('discover-modal');
+      modal.classList.remove('modal-open');
+      modal.classList.add('modal-close');
+      modal.addEventListener('animationend', function handler() {
+        modal.classList.add('hidden');
+        modal.classList.remove('modal-close');
+        modal.removeEventListener('animationend', handler);
+      }, { once: true });
+      document.body.style.overflow = '';
+    }
+
+    let lightboxIndex = 0;
+    function openLightbox(idx) {
+      lightboxIndex = idx;
+      updateLightbox();
+      document.getElementById('lightbox').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+    function lightboxNav(dir) {
+      const len = ORDERD.store.gallery.length;
+      lightboxIndex = (lightboxIndex + dir + len) % len;
+      updateLightbox();
+    }
+    function updateLightbox() {
+      document.getElementById('lb-img').src = ORDERD.store.gallery[lightboxIndex];
+      document.getElementById('lb-counter').textContent = (lightboxIndex + 1) + ' / ' + ORDERD.store.gallery.length;
+    }
+
+    (function initLightboxSwipe() {
+      const lb = document.getElementById('lightbox');
+      let sx = 0;
+      lb.addEventListener('touchstart', e => { e.stopPropagation(); sx = e.touches[0].clientX; }, { passive: true });
+      lb.addEventListener('touchend', e => {
+        e.stopPropagation();
+        const dx = e.changedTouches[0].clientX - sx;
+        if (Math.abs(dx) < 60) return;
+        lightboxNav(dx > 0 ? -1 : 1);
+      });
+    })();
+
+    function doCheckin() {
+      const el = document.getElementById('checkin-count');
+      const parts = el.textContent.replace('k','').split('.');
+      let val = parseFloat(parts[0]) + (parts[1] ? parseFloat(parts[1])/10 : 0) + 0.1;
+      el.textContent = val.toFixed(1) + 'k';
+      showToast('Check-in thành công!', '<svg class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>');
+    }
+
+    function showToast(msg, icon) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      document.getElementById('toast-icon').innerHTML = icon || '';
+      toast.classList.remove('opacity-0', '-translate-y-2');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+      }, 1800);
+    }
+
+    const tabOrder = ['photos', 'reviews', 'about', 'discover'];
+    let activeTabIndex = 0;
+
+    function switchToTab(name, direction) {
+      const oldIndex = activeTabIndex;
+      const newIndex = tabOrder.indexOf(name);
+      if (oldIndex === newIndex && !direction) return;
+
+      const dir = direction || (newIndex > oldIndex ? 'right' : 'left');
+      const oldTab = document.getElementById('tab-' + tabOrder[oldIndex]);
+      const newTab = document.getElementById('tab-' + name);
+
+      document.querySelectorAll('#tab-nav button').forEach((b, i) => {
+        b.classList.toggle('active', i === newIndex);
+        b.style.color = i === newIndex ? 'var(--text)' : 'var(--text-secondary)';
+      });
+
+      // Animate old tab out
+      if (oldTab) {
+        oldTab.classList.add(dir === 'right' ? 'tab-slide-out-left' : 'tab-slide-out-right');
+        oldTab.addEventListener('animationend', function handler() {
+          oldTab.classList.add('hidden');
+          oldTab.classList.remove(dir === 'right' ? 'tab-slide-out-left' : 'tab-slide-out-right');
+          oldTab.removeEventListener('animationend', handler);
+        }, { once: true });
+      }
+
+      // Animate new tab in
+      newTab.classList.remove('hidden');
+      newTab.classList.add(dir === 'right' ? 'tab-slide-in-right' : 'tab-slide-in-left');
+      newTab.addEventListener('animationend', function handler() {
+        newTab.classList.remove(dir === 'right' ? 'tab-slide-in-right' : 'tab-slide-in-left');
+        newTab.removeEventListener('animationend', handler);
+      }, { once: true });
+
+      activeTabIndex = newIndex;
+    }
+
+    document.getElementById('tab-nav').querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => switchToTab(btn.dataset.tab));
+    });
+
+    (function initSwipe() {
+      let startX = 0, startY = 0;
+      document.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+      document.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (document.getElementById('lightbox') && !document.getElementById('lightbox').classList.contains('hidden')) return;
+        if (document.getElementById('discover-modal') && !document.getElementById('discover-modal').classList.contains('hidden')) return;
+        if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy)) return;
+        if (dx < 0 && activeTabIndex < tabOrder.length - 1) switchToTab(tabOrder[activeTabIndex + 1], 'right');
+        else if (dx > 0 && activeTabIndex > 0) switchToTab(tabOrder[activeTabIndex - 1], 'left');
+      }, { passive: true });
+    })();
+
+    function updateStatus() {
+      const hour = new Date().getHours();
+      const isOpen = hour >= ORDERD.store.openHour && hour < ORDERD.store.closeHour;
+      const badge = document.getElementById('status-badge');
+      if (isOpen) {
+        badge.innerHTML = '<span class="w-2 h-2 bg-white/80 rounded-full pulse-dot"></span> Đang mở cửa';
+        badge.className = 'px-3 py-1.5 text-white text-xs font-semibold rounded-full flex items-center gap-1.5';
+        badge.style.background = 'var(--primary)';
+      } else {
+        badge.innerHTML = 'Đã đóng cửa';
+        badge.className = 'px-3 py-1.5 text-white text-xs font-semibold rounded-full flex items-center gap-1.5';
+        badge.style.background = 'var(--text-secondary)';
+      }
+    }
+    updateStatus();
+
+    let views = parseInt(localStorage.getItem('orderd_store_views') || '12400');
+    views++;
+    localStorage.setItem('orderd_store_views', views);
+    document.getElementById('view-count').textContent = (views/1000).toFixed(1).replace(/\.0$/,'') + 'k';
+  </script>
+</body>
+</html>

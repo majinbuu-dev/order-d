@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>OrderD — Đặt Hàng Thành Công</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme: { extend: { fontFamily: { body: ['Inter', 'system-ui', 'sans-serif'] } } } }</script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --surface: #ffffff;
+      --border: #e8e8e8;
+      --text: #0a0a0a;
+      --text-secondary: #737373;
+      --primary: #0a0a0a;
+      --primary-hover: #262626;
+      --accent: #636363;
+      --accent-light: #f5f5f5;
+    }
+    [data-theme="ocean"] {
+      --bg: #f4f6f9;
+      --bg-secondary: #e8ecf2;
+      --surface: #ffffff;
+      --border: #d3dae5;
+      --text: #1e2d44;
+      --text-secondary: #506380;
+      --primary: #213555;
+      --primary-hover: #152238;
+      --accent: #5a7ba6;
+      --accent-light: #e8ecf2;
+    }
+    [data-theme="sunset"] {
+      --bg: #f9f6f3;
+      --bg-secondary: #f0e9e2;
+      --surface: #ffffff;
+      --border: #e2d5c6;
+      --text: #4a3728;
+      --text-secondary: #6b5240;
+      --primary: #5c3d2e;
+      --primary-hover: #3e2518;
+      --accent: #c4956a;
+      --accent-light: #f0e9e2;
+    }
+    [data-theme="forest"] {
+      --bg: #f5f8f3;
+      --bg-secondary: #e9efe4;
+      --surface: #ffffff;
+      --border: #d2dcc8;
+      --text: #2d3b24;
+      --text-secondary: #4a5a3e;
+      --primary: #34472a;
+      --primary-hover: #1f2e18;
+      --accent: #718c5a;
+      --accent-light: #e9efe4;
+    }
+
+    body { background: var(--bg); color: var(--text); }
+    .btn-scale:active { transform: scale(0.97); }
+
+    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .pop-in { animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+    .fade-up { animation: fadeUp 0.5s ease-out forwards; opacity: 0; }
+  </style>
+</head>
+<body class="font-body antialiased min-h-screen flex flex-col items-center justify-center px-6">
+
+  <div class="text-center max-w-sm">
+    <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 pop-in" style="background:var(--accent-light)">
+      <svg class="w-10 h-10" style="color:var(--accent)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+    </div>
+
+    <h1 class="text-3xl font-bold mb-2 fade-up" style="animation-delay:0.15s">Đặt hàng thành công!</h1>
+    <p class="mb-6 fade-up" style="animation-delay:0.25s;color:var(--text-secondary)">Cảm ơn bạn đã đặt hàng tại <span class="font-semibold store-name">OrderD</span>. Chúng tôi sẽ chuẩn bị món và giao đến bạn trong thời gian sớm nhất.</p>
+
+    <div class="rounded-2xl p-5 border text-left mb-6 fade-up" style="animation-delay:0.35s;background:var(--surface);border-color:var(--border)">
+      <h3 class="font-semibold text-sm mb-3" style="color:var(--text-secondary)">Thông tin đơn hàng</h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between"><span style="color:var(--text-secondary)">Mã đơn</span><span class="font-medium" id="order-id">#ORD-...</span></div>
+        <div class="flex justify-between"><span style="color:var(--text-secondary)">Số món</span><span class="font-medium" id="order-items-count">0</span></div>
+        <div class="flex justify-between pt-2" style="border-top:1px solid var(--border)"><span style="color:var(--text-secondary)">Tổng tiền</span><span class="font-bold text-lg" style="color:var(--primary)" id="order-total">0đ</span></div>
+      </div>
+    </div>
+
+    <a href="menu.html" class="block w-full py-3.5 text-white font-semibold rounded-2xl btn-scale transition-colors fade-up" style="animation-delay:0.45s;background:var(--primary)">
+      Tiếp tục đặt món
+    </a>
+    <a href="store.html" class="block text-center text-sm mt-3 fade-up" style="animation-delay:0.5s;color:var(--text-secondary)">← Về trang cửa hàng</a>
+  </div>
+
+  <script src="../../data/store.js"></script>
+  <script>
+    const data = JSON.parse(localStorage.getItem('orderd_confirm') || '{}');
+    document.getElementById('order-items-count').textContent = (data.items || 0) + ' món';
+    document.getElementById('order-total').textContent = formatVND(data.total || 0);
+    document.getElementById('order-id').textContent = '#ORD-' + Date.now().toString(36).toUpperCase();
+    document.querySelectorAll('.store-name').forEach(el => el.textContent = ORDERD.store.name);
+    localStorage.removeItem('orderd_confirm');
+
+    function formatVND(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ'; }
+  </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 window.ORDERD = window.ORDERD || {};
 
 ORDERD.store = {
-  name: 'OrderD',
+  name: 'ĐỆ NHẤT QUÁN',
   tagline: 'Tinh hoa ẩm thực — Mỗi món một câu chuyện',
-  description: 'OrderD ra đời với sứ mệnh mang hương vị đích thực đến từng bữa ăn. Nguyên liệu tươi mỗi ngày, công thức gia truyền, đầu bếp lành nghề — tất cả tạo nên trải nghiệm ẩm thực khó quên.',
+  description: 'OrderD ra đời với sứ mệnh mang hương vị đích thực đến từng bữa ăn. Nguyên liệu tươi mỗi ngày, công thức gia truyền, đầu bếp lành nghề tất cả tạo nên trải nghiệm ẩm thực khó quên.',
   address: '123 Nguyễn Huệ, Quận 1, TP. HCM',
   phone: '1900888999',
   openHour: 10,
