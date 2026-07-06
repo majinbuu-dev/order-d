@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>OrderD — Thanh Toán</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg: #f7fafb;
+      --bg-secondary: #edf2f3;
+      --surface: #ffffff;
+      --border: #e8ecef;
+      --text: #1a1a1a;
+      --text-secondary: #6b7280;
+      --primary: #4ea4b3;
+      --primary-hover: #4392a0;
+      --accent: #b8e1e7;
+      --accent-light: #e0f1f3;
+    }
+    [data-theme="coral"] {
+      --bg: #fef9f6;
+      --bg-secondary: #fdf0eb;
+      --surface: #ffffff;
+      --border: #f2dfd5;
+      --text: #2d231f;
+      --text-secondary: #7a6458;
+      --primary: #e07b5a;
+      --primary-hover: #c96a4a;
+      --accent: #f2bfa8;
+      --accent-light: #fdf0eb;
+    }
+    [data-theme="lavender"] {
+      --bg: #f8f6fd;
+      --bg-secondary: #f0edf9;
+      --surface: #ffffff;
+      --border: #e2dcf0;
+      --text: #26223a;
+      --text-secondary: #6a6485;
+      --primary: #7c6bb8;
+      --primary-hover: #6a5aa3;
+      --accent: #c4b8e8;
+      --accent-light: #f0edf9;
+    }
+    [data-theme="mint"] {
+      --bg: #f6faf8;
+      --bg-secondary: #edf5f0;
+      --surface: #ffffff;
+      --border: #d8e8dc;
+      --text: #1e2d24;
+      --text-secondary: #5a7060;
+      --primary: #4d8c6a;
+      --primary-hover: #3d7356;
+      --accent: #a0d4b6;
+      --accent-light: #edf5f0;
+    }
+
+    body { background: var(--bg); color: var(--text); }
+
+    .glass { background: rgba(255,255,255,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .btn-scale:active { transform: scale(0.97); }
+  </style>
+</head>
+<body class="font-body antialiased">
+
+  <header class="sticky top-0 z-50 glass border-b" style="border-color:var(--border)">
+    <div class="max-w-lg mx-auto px-5 h-14 flex items-center gap-3">
+      <a href="menu.html" class="p-2 -ml-2 btn-scale">
+        <svg class="w-5 h-5" style="color:var(--text-secondary)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      </a>
+      <h1 class="text-lg font-bold">Thanh toán</h1>
+    </div>
+  </header>
+
+  <div class="max-w-lg mx-auto px-5 py-4 flex flex-col" style="min-height: calc(100vh - 56px)">
+
+    <div id="empty-state" class="hidden flex-1 flex flex-col items-center justify-center text-center">
+      <svg class="w-14 h-14 mb-3" style="color:var(--text-secondary);opacity:0.2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+      <p class="text-sm" style="color:var(--text-secondary)">Chưa có món nào</p>
+      <a href="menu.html" class="text-sm font-semibold underline mt-2" style="color:var(--primary)">Quay lại thực đơn</a>
+    </div>
+
+    <div id="order-section" class="flex-1 flex flex-col">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-bold text-lg">Đơn hàng</h3>
+        <a href="menu.html" class="text-sm font-semibold rounded-2xl px-4 py-2 border btn-scale" style="color:var(--text-secondary);border-color:var(--border)">+ Thêm món</a>
+      </div>
+
+      <div id="order-items" class="space-y-3 flex-1 overflow-y-auto"></div>
+
+      <div class="mt-3 pt-3 space-y-2 text-sm" style="border-top:1px solid var(--border)">
+        <div class="flex justify-between"><span style="color:var(--text-secondary)">Tạm tính</span><span id="subtotal">0đ</span></div>
+        <div class="flex justify-between"><span style="color:var(--text-secondary)">VAT (10%)</span><span id="vat-amount">0đ</span></div>
+        <div class="flex justify-between font-bold pt-3 text-lg" style="border-top:1px solid var(--border)"><span>Tổng</span><span id="total" class="text-xl" style="color:var(--primary)">0đ</span></div>
+      </div>
+
+      <div class="mt-5">
+        <p class="text-xs font-semibold mb-2" style="color:var(--text-secondary)">Thanh toán</p>
+        <div class="flex gap-2">
+          <button id="pay-cod" onclick="selectPayment('cod')" class="flex-1 py-3.5 rounded-2xl text-sm font-semibold transition-all btn-scale flex items-center justify-center gap-2 shadow-sm" style="background:var(--primary);color:#fff">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+            Tiền mặt
+          </button>
+          <button id="pay-transfer" onclick="selectPayment('transfer')" class="flex-1 py-3.5 rounded-2xl text-sm font-medium transition-all btn-scale flex items-center justify-center gap-2" style="background:var(--bg-secondary);color:var(--text-secondary)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            Chuyển khoản
+          </button>
+        </div>
+      </div>
+
+      <button id="place-order-btn" onclick="placeOrder(event)" class="w-full py-4 text-white font-semibold rounded-2xl btn-scale mt-4 flex items-center justify-center gap-2 shadow-lg" style="background:var(--primary); box-shadow:0 4px 16px rgba(0,0,0,0.12)">
+        Đặt hàng
+        <span class="w-px h-4 bg-white/20"></span>
+        <span id="btn-total">0đ</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function formatVND(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ'; }
+
+    function loadCart() {
+      try { return JSON.parse(localStorage.getItem('orderd_cart') || '[]'); } catch(e) { return []; }
+    }
+
+    (function initTheme() {
+      const saved = localStorage.getItem('orderd_fresh_theme') || 'aqua';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    const cart = loadCart();
+
+    if (cart.length === 0) {
+      document.getElementById('empty-state').classList.remove('hidden');
+      document.getElementById('order-section').classList.add('hidden');
+    } else {
+      renderOrder();
+    }
+
+    function renderOrder() {
+      const itemsEl = document.getElementById('order-items');
+      let subtotal = 0;
+
+      itemsEl.innerHTML = cart.map(item => {
+        const itemPrice = item.price + (item.sizePrice || 0);
+        const line = itemPrice * item.qty;
+        subtotal += line;
+        const sizeLabel = {S:'Nhỏ',M:'Vừa',L:'Lớn'}[item.size] || '';
+        return `
+          <div class="flex items-center gap-3 p-2 rounded-2xl">
+            <img src="${item.img}" class="w-14 h-14 rounded-2xl object-cover flex-shrink-0" style="background:var(--bg-secondary)" />
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold truncate">${item.name}</p>
+              <div class="flex items-center gap-1.5 mt-0.5">
+                <span class="text-xs font-bold" style="color:var(--primary)">${formatVND(itemPrice)}</span>
+                ${sizeLabel ? '<span class="text-[10px] px-1.5 py-0.5 rounded-full" style="background:var(--bg-secondary);color:var(--text-secondary)">' + sizeLabel + '</span>' : ''}
+              </div>
+              ${item.note ? '<p class="text-[11px] mt-0.5 italic" style="color:var(--text-secondary);opacity:0.6">' + item.note + '</p>' : ''}
+            </div>
+            <span class="w-8 h-8 flex items-center justify-center text-xs font-bold rounded-2xl flex-shrink-0" style="background:var(--bg-secondary);color:var(--text)">${item.qty}</span>
+            <span class="text-sm font-bold flex-shrink-0 w-16 text-right" style="color:var(--primary)">${formatVND(line)}</span>
+          </div>
+        `;
+      }).join('');
+
+      const tax = Math.round(subtotal * 0.10 * 100) / 100;
+      const total = Math.round((subtotal + tax) * 100) / 100;
+
+      document.getElementById('subtotal').textContent = formatVND(subtotal);
+      document.getElementById('vat-amount').textContent = formatVND(tax);
+      document.getElementById('total').textContent = formatVND(total);
+      document.getElementById('btn-total').textContent = formatVND(total);
+    }
+
+    let paymentMethod = 'cod';
+
+    function selectPayment(method) {
+      paymentMethod = method;
+      const codBtn = document.getElementById('pay-cod');
+      const transferBtn = document.getElementById('pay-transfer');
+      if (method === 'cod') {
+        codBtn.style.background = 'var(--primary)';
+        codBtn.style.color = '#fff';
+        codBtn.style.fontWeight = '600';
+        codBtn.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)';
+        transferBtn.style.background = 'var(--bg-secondary)';
+        transferBtn.style.color = 'var(--text-secondary)';
+        transferBtn.style.fontWeight = '500';
+        transferBtn.style.boxShadow = 'none';
+      } else {
+        transferBtn.style.background = 'var(--primary)';
+        transferBtn.style.color = '#fff';
+        transferBtn.style.fontWeight = '600';
+        transferBtn.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)';
+        codBtn.style.background = 'var(--bg-secondary)';
+        codBtn.style.color = 'var(--text-secondary)';
+        codBtn.style.fontWeight = '500';
+        codBtn.style.boxShadow = 'none';
+      }
+    }
+
+    function placeOrder(e) {
+      e.preventDefault();
+      const count = cart.reduce((s,c) => s + c.qty, 0);
+      const totalVal = cart.reduce((s,c) => s + (c.price + (c.sizePrice||0)) * c.qty, 0);
+      localStorage.setItem('orderd_confirm', JSON.stringify({ items: count, total: totalVal }));
+      localStorage.removeItem('orderd_cart');
+      window.location.href = 'confirm.html';
+    }
+  </script>
+</body>
+</html>

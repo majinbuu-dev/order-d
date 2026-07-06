@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>OrderD — Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            body: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --bg: #f7fafb;
+      --bg-secondary: #edf2f3;
+      --surface: #ffffff;
+      --border: #e8ecef;
+      --text: #1a1a1a;
+      --text-secondary: #6b7280;
+      --primary: #4ea4b3;
+      --primary-hover: #4392a0;
+      --accent: #b8e1e7;
+      --accent-light: #e0f1f3;
+    }
+    [data-theme="coral"] {
+      --bg: #fef9f6;
+      --bg-secondary: #fdf0eb;
+      --surface: #ffffff;
+      --border: #f2dfd5;
+      --text: #2d231f;
+      --text-secondary: #7a6458;
+      --primary: #e07b5a;
+      --primary-hover: #c96a4a;
+      --accent: #f2bfa8;
+      --accent-light: #fdf0eb;
+    }
+    [data-theme="lavender"] {
+      --bg: #f8f6fd;
+      --bg-secondary: #f0edf9;
+      --surface: #ffffff;
+      --border: #e2dcf0;
+      --text: #26223a;
+      --text-secondary: #6a6485;
+      --primary: #7c6bb8;
+      --primary-hover: #6a5aa3;
+      --accent: #c4b8e8;
+      --accent-light: #f0edf9;
+    }
+    [data-theme="mint"] {
+      --bg: #f6faf8;
+      --bg-secondary: #edf5f0;
+      --surface: #ffffff;
+      --border: #d8e8dc;
+      --text: #1e2d24;
+      --text-secondary: #5a7060;
+      --primary: #4d8c6a;
+      --primary-hover: #3d7356;
+      --accent: #a0d4b6;
+      --accent-light: #edf5f0;
+    }
+
+    body { background: var(--bg); color: var(--text); }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .btn-scale:active { transform: scale(0.95); }
+
+    .cat-item { cursor: pointer; transition: all 0.2s; }
+    .cat-item.active .cat-icon { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .cat-item.active .cat-label { color: var(--primary); }
+    .cat-item:not(.active) .cat-icon { background: transparent; color: var(--primary); border: 2px solid var(--border); }
+    .cat-item:not(.active) .cat-label { color: var(--text-secondary); }
+
+    .bottom-nav { background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+
+    .cart-drawer { transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+    .cart-drawer.open { transform: translateX(0); }
+    .cart-overlay { opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+    .cart-overlay.open { opacity: 1; visibility: visible; }
+
+    .theme-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+    .theme-dot.active { border-color: var(--text); transform: scale(1.2); }
+    .theme-dot:hover { transform: scale(1.1); }
+
+    .theme-picker-btn { width: 30px; height: 30px; border-radius: 50%; background: var(--primary); border: 2px solid var(--border); cursor: pointer; transition: all 0.2s; }
+    .theme-picker-btn:hover { transform: scale(1.1); }
+
+    .theme-dropdown { position: absolute; top: 40px; right: -8px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); display: none; z-index: 60; flex-direction: column; gap: 6px; }
+    .theme-dropdown.open { display: flex; }
+
+    .qty-badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; font-size: 10px; background: var(--primary); color: #fff; border-radius: 9999px; display: flex; align-items: center; justify-content: center; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+
+    .size-btn { background: var(--bg-secondary); color: var(--text-secondary); font-weight: 500; }
+    .size-btn.active { background: var(--primary) !important; color: #fff !important; font-weight: 600; }
+
+    .nav-home-btn { transition: all 0.2s; }
+  </style>
+</head>
+<body class="font-body antialiased">
+
+  <!-- MAIN CONTAINER -->
+  <div class="max-w-lg mx-auto min-h-screen flex flex-col relative" style="background:var(--bg)">
+
+    <!-- HEADER - Greeting -->
+    <header class="pt-6 pb-3 px-6 flex items-center justify-between">
+      <div>
+        <p class="text-sm font-bold store-name" style="color:var(--primary)">OrderD</p>
+        <h1 class="text-xl font-medium leading-snug">
+          Chào bạn! Hôm nay<br>
+          <span class="font-bold">bạn muốn ăn gì?</span>
+        </h1>
+      </div>
+      <div class="relative flex-shrink-0">
+        <button id="theme-picker-btn" class="theme-picker-btn" onclick="toggleThemePicker()" title="Đổi màu"></button>
+        <div id="theme-dropdown" class="theme-dropdown">
+          <div class="flex gap-2">
+            <button class="theme-dot active" data-theme="aqua" style="background:#4ea4b3" onclick="setTheme('aqua')"></button>
+            <button class="theme-dot" data-theme="coral" style="background:#e07b5a" onclick="setTheme('coral')"></button>
+            <button class="theme-dot" data-theme="lavender" style="background:#7c6bb8" onclick="setTheme('lavender')"></button>
+            <button class="theme-dot" data-theme="mint" style="background:#4d8c6a" onclick="setTheme('mint')"></button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- SCROLLABLE MAIN -->
+    <main class="flex-1 overflow-y-auto scrollbar-hide px-6 pb-24" id="main-scroll">
+
+      <!-- SEARCH -->
+      <section class="mt-3">
+        <div class="relative flex items-center">
+          <span class="absolute left-4" style="color:var(--text-secondary);opacity:0.5">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+          </span>
+          <input id="search-input" type="search" placeholder="Tìm món..."
+            class="w-full rounded-2xl py-4 pl-12 pr-4 text-sm font-medium border-0 focus:outline-none focus:ring-2"
+            style="background:var(--bg-secondary);color:var(--text);--tw-ring-color:var(--primary)" />
+        </div>
+      </section>
+
+      <!-- CATEGORIES - Icon based -->
+      <section class="mt-8 overflow-x-auto scrollbar-hide flex gap-5" id="category-nav"></section>
+
+      <!-- FEATURED SECTION -->
+      <section class="mt-8" id="featured-section">
+        <h2 class="text-base font-bold mb-4">Nổi bật</h2>
+        <div id="featured-grid" class="flex gap-5 overflow-x-auto scrollbar-hide -mx-6 px-6"></div>
+      </section>
+
+      <!-- ALL ITEMS - List style -->
+      <section class="mt-10" id="all-section">
+        <div class="flex items-center justify-between mb-4">
+          <h2 id="section-title" class="text-base font-bold">Thực đơn</h2>
+          <span id="item-count" class="text-xs font-medium" style="color:var(--text-secondary)"></span>
+        </div>
+        <div id="items-list" class="space-y-3"></div>
+      </section>
+
+    </main>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav fixed bottom-0 left-0 right-0 z-30 border-t" style="border-color:var(--border)">
+      <div class="max-w-lg mx-auto px-6 py-3 flex items-center justify-between">
+        <div class="flex-1 flex justify-center">
+          <button class="flex items-center gap-2 py-2 px-4 rounded-xl nav-home-btn whitespace-nowrap" style="background:var(--primary);color:#fff" id="nav-home">
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+            <span class="text-sm font-bold">Menu</span>
+          </button>
+        </div>
+        <div class="flex-1 flex justify-center">
+          <a href="store.html" id="nav-store" style="color:var(--text-secondary);opacity:0.4">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          </a>
+        </div>
+        <div class="flex-1 flex justify-center">
+          <button onclick="toggleCart()" id="nav-cart" class="relative" style="color:var(--text-secondary);opacity:0.4">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 110 4 2 2 0 010-4z"/></svg>
+            <span id="nav-cart-badge" class="qty-badge hidden">0</span>
+          </button>
+        </div>
+
+      </div>
+    </nav>
+
+    <!-- CART OVERLAY -->
+    <div id="cart-overlay" class="cart-overlay fixed inset-0 z-40" style="background:rgba(0,0,0,0.3)" onclick="closeCart()"></div>
+
+    <!-- CART DRAWER -->
+    <div id="cart-drawer" class="cart-drawer fixed right-0 top-0 h-full w-full sm:w-[400px] z-50 flex flex-col shadow-2xl" style="background:var(--surface)">
+      <div class="flex items-center justify-between px-5 h-14 flex-shrink-0 border-b" style="border-color:var(--border)">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" style="color:var(--primary)" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 110 4 2 2 0 010-4z"/></svg>
+          <h2 class="text-lg font-semibold">Đơn hàng</h2>
+          <span id="cart-count" class="text-xs hidden" style="color:var(--text-secondary)"></span>
+        </div>
+        <button onclick="closeCart()" class="p-2 -mr-2 btn-scale" style="color:var(--text-secondary)">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="cart-items" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
+      <div id="cart-footer" class="px-5 py-4 space-y-3 flex-shrink-0 hidden border-t" style="border-color:var(--border)">
+        <div class="flex justify-between text-sm" style="color:var(--text-secondary)"><span>Tạm tính</span><span id="subtotal">0đ</span></div>
+        <div class="flex justify-between text-sm" style="color:var(--text-secondary)"><span>VAT (10%)</span><span id="vat-amount">0đ</span></div>
+        <div class="flex justify-between text-base font-semibold pt-3" style="border-top:1px solid var(--border)">
+          <span>Tổng cộng</span><span id="total" class="text-lg font-bold" style="color:var(--primary)">0đ</span>
+        </div>
+        <button onclick="goToCheckout()" class="w-full py-3.5 text-white font-bold rounded-2xl btn-scale shadow-lg" style="background:var(--primary); box-shadow:0 4px 16px rgba(0,0,0,0.12)">
+          Đặt hàng
+        </button>
+      </div>
+    </div>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div id="product-modal" class="fixed inset-0 z-[70] hidden flex items-end sm:items-center justify-center">
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeProductModal()"></div>
+      <div class="modal-sheet relative w-full sm:max-w-[390px] max-h-[90vh] overflow-y-auto scrollbar-hide rounded-t-[32px] sm:rounded-[32px]" style="background:var(--surface)">
+
+        <!-- Top bar: close + category -->
+        <div class="sticky top-0 z-10 flex items-center justify-between px-5 py-3" style="background:var(--surface);border-bottom:1px solid var(--border)">
+          <button onclick="closeProductModal()" class="w-10 h-10 rounded-xl flex items-center justify-center text-white btn-scale" style="background:var(--primary)">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+          </button>
+          <span id="modal-cat" class="text-xs font-semibold px-3 py-1 rounded-full" style="background:var(--accent-light);color:var(--primary)"></span>
+          <div class="w-10"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="px-5 pt-4 pb-3">
+          <h1 id="modal-name" class="text-2xl font-extrabold mb-2" style="color:var(--text)">Name</h1>
+          <p id="modal-desc" class="text-[15px] leading-relaxed mb-4" style="color:var(--text-secondary)">Description</p>
+          <div id="modal-price" class="text-3xl font-bold mb-5" style="color:var(--primary)">0đ</div>
+
+          <div class="mb-5" id="modal-size-section">
+            <h2 class="text-lg font-bold mb-3" style="color:var(--text)">Kích cỡ</h2>
+            <div id="modal-sizes" class="flex gap-3 overflow-x-auto scrollbar-hide"></div>
+          </div>
+
+          <div class="mb-5">
+            <h2 class="text-lg font-bold mb-3" style="color:var(--text)">Ghi chú</h2>
+            <textarea id="modal-note" rows="2" placeholder="VD: ít cay, thêm rau..."
+              class="w-full px-4 py-3 rounded-2xl border text-sm resize-none focus:outline-none focus:ring-2"
+              style="background:var(--bg-secondary);border-color:var(--border);color:var(--text);--tw-ring-color:var(--primary)"></textarea>
+          </div>
+
+          <div class="flex items-center space-x-3 mb-5">
+            <div class="flex items-center gap-3 p-1.5 rounded-2xl" style="background:var(--accent-light)">
+              <button onclick="productModalQty(-1)" class="w-10 h-10 flex items-center justify-center rounded-xl btn-scale text-lg font-bold" style="background:var(--accent);color:var(--primary)">−</button>
+              <span id="modal-qty" class="font-bold w-8 text-center text-lg">1</span>
+              <button onclick="productModalQty(1)" class="w-10 h-10 flex items-center justify-center rounded-xl btn-scale text-lg font-bold text-white" style="background:var(--primary)">+</button>
+            </div>
+            <button onclick="addFromModal()" class="flex-grow h-12 text-white font-bold text-base rounded-2xl btn-scale shadow-lg" style="background:var(--primary)">
+              Thêm <span id="modal-btn-price">0đ</span>
+            </button>
+          </div>
+
+          <!-- Product Image at bottom -->
+          <div class="aspect-[4/3] rounded-2xl overflow-hidden" style="background:var(--bg-secondary)">
+            <img id="modal-img" src="" alt="" class="w-full h-full object-cover" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+      @keyframes slideDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
+      .modal-open .modal-sheet { animation: slideUp 0.35s ease-out both; }
+      .modal-close .modal-sheet { animation: slideDown 0.25s ease-in both; }
+    </style>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    const CAT_ICONS = {
+      coffee: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>',
+      tea: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+      smoothie: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+      juice: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>',
+      snack: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
+    };
+
+    let menuData = null;
+    let storeData = null;
+    let items = [];
+    let catLabels = {};
+    let featuredTag = 'featured';
+    let activeCat = 'all';
+    let searchQuery = '';
+    let cart = [];
+    let isFav = false;
+
+    function formatVND(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ'; }
+
+    async function fetchData() {
+      try {
+        const [menuRes, storeRes] = await Promise.all([
+          fetch('../../data/menu.json'), fetch('../../data/store.json')
+        ]);
+        menuData = await menuRes.json();
+        storeData = await storeRes.json();
+        items = menuData.items;
+        catLabels = menuData.catLabels;
+        featuredTag = menuData.featuredTag || 'featured';
+        document.querySelectorAll('.store-name').forEach(el => el.textContent = storeData.store.name);
+        initTheme();
+        loadCartFromLS();
+        renderAll();
+      } catch(e) {
+        document.getElementById('all-section').innerHTML = '<p class="text-center py-10" style="color:var(--text-secondary)">Không thể tải dữ liệu</p>';
+      }
+    }
+
+    // --- THEME ---
+    function toggleThemePicker() { document.getElementById('theme-dropdown').classList.toggle('open'); }
+    document.addEventListener('click', (e) => {
+      const dd = document.getElementById('theme-dropdown');
+      const btn = document.getElementById('theme-picker-btn');
+      if (dd && btn && !btn.contains(e.target)) dd.classList.remove('open');
+    });
+
+    function setTheme(name) {
+      document.documentElement.setAttribute('data-theme', name);
+      localStorage.setItem('orderd_fresh_theme', name);
+      document.querySelectorAll('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.theme === name));
+      const btn = document.getElementById('theme-picker-btn');
+      btn.style.background = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+      document.getElementById('theme-dropdown').classList.remove('open');
+    }
+    function initTheme() {
+      const saved = localStorage.getItem('orderd_fresh_theme') || 'aqua';
+      setTheme(saved);
+    }
+
+    // --- SEARCH ---
+    const searchInput = document.getElementById('search-input');
+    let searchTimeout;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        searchQuery = searchInput.value.trim().toLowerCase();
+        activeCat = 'all';
+        renderAll();
+      }, 200);
+    });
+
+    // --- CATEGORY NAV (icon-based) ---
+    function renderCategories() {
+      const cats = Object.keys(catLabels);
+      const el = document.getElementById('category-nav');
+      const allActive = activeCat === 'all' && !searchQuery;
+      el.innerHTML = `
+        <div class="flex flex-col items-center gap-2 flex-shrink-0 cat-item ${allActive ? 'active' : ''}" data-cat="all">
+          <div class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+          </div>
+          <span class="cat-label text-xs font-bold transition-colors">Tất Cả</span>
+        </div>
+      ` + cats.map(c => {
+        const isActive = activeCat === c && !searchQuery;
+        return `
+        <div class="flex flex-col items-center gap-2 flex-shrink-0 cat-item ${isActive ? 'active' : ''}" data-cat="${c}">
+          <div class="cat-icon w-14 h-14 rounded-2xl flex items-center justify-center transition-all">${CAT_ICONS[c] || CAT_ICONS.drinks}</div>
+          <span class="cat-label text-xs font-bold transition-colors">${catLabels[c]}</span>
+        </div>`;
+      }).join('');
+
+      el.querySelectorAll('.cat-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeCat = btn.dataset.cat;
+          searchQuery = '';
+          searchInput.value = '';
+          renderAll();
+        });
+      });
+    }
+
+    // --- ITEM RENDERING ---
+    function getFilteredItems() {
+      let filtered = items;
+      if (searchQuery) filtered = filtered.filter(m => m.name.toLowerCase().includes(searchQuery) || m.tags.some(t => t.toLowerCase().includes(searchQuery)));
+      if (activeCat !== 'all') filtered = filtered.filter(m => m.cat === activeCat);
+      return filtered;
+    }
+
+    function renderFeatured() {
+      const featured = items.filter(m => m.tags.includes(featuredTag));
+      const section = document.getElementById('featured-section');
+      const catNav = document.getElementById('category-nav');
+      if (searchQuery) {
+        section.classList.add('hidden');
+        catNav.classList.add('hidden');
+      } else {
+        catNav.classList.remove('hidden');
+        if (featured.length === 0) { section.classList.add('hidden'); }
+        else { section.classList.remove('hidden'); }
+      }
+
+      document.getElementById('featured-grid').innerHTML = featured.map((m, i) => `
+        <div class="flex-1 min-w-[140px] max-w-[170px] bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col flex-shrink-0 cursor-pointer btn-scale"
+          style="border-color:var(--border)" onclick="openProductModal('${m.id}')">
+          <div class="h-28 relative" style="background:var(--bg-secondary)">
+            <img src="${m.img}" alt="${m.name}" loading="lazy" class="w-full h-full object-cover" />
+            ${m.tags.includes(featuredTag) ? '<span class="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full font-bold" style="background:var(--primary);color:#fff">BEST</span>' : ''}
+          </div>
+          <div class="p-3 flex flex-col">
+            <h3 class="text-sm font-bold truncate">${m.name}</h3>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs font-bold" style="color:var(--primary)">${formatVND(m.price)}</span>
+              <button onclick="event.stopPropagation();openProductModal('${m.id}')" class="w-8 h-8 rounded-lg flex items-center justify-center text-base font-bold btn-scale leading-none" style="background:var(--accent-light);color:var(--primary);padding-bottom:2px">+</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAllItems() {
+      const filtered = getFilteredItems();
+      document.getElementById('section-title').textContent = searchQuery ? 'Kết quả tìm kiếm' : activeCat === 'all' ? 'Thực đơn' : (catLabels[activeCat] || activeCat);
+      document.getElementById('item-count').textContent = filtered.length + ' món';
+
+      const list = document.getElementById('items-list');
+      if (filtered.length === 0) {
+        list.innerHTML = '<p class="text-center py-16" style="color:var(--text-secondary);opacity:0.6">Không tìm thấy món nào</p>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(m => `
+        <div class="bg-white p-3 rounded-2xl shadow-sm border flex items-center gap-4 cursor-pointer btn-scale" style="border-color:var(--border)" onclick="openProductModal('${m.id}')">
+          <div class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 relative" style="background:var(--bg-secondary)">
+            <img src="${m.img}" alt="${m.name}" loading="lazy" class="w-full h-full object-cover" />
+            ${m.tags.includes(featuredTag) ? '<span class="absolute top-1 left-1 text-[8px] px-1.5 py-0.5 rounded-full font-bold" style="background:var(--primary);color:#fff">BEST</span>' : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-sm font-bold truncate">${m.name}</h4>
+            <p class="text-xs font-bold mt-1" style="color:var(--primary)">${formatVND(m.price)}</p>
+          </div>
+          <button onclick="event.stopPropagation();openProductModal('${m.id}')" class="w-9 h-9 rounded-xl flex items-center justify-center text-base font-bold btn-scale flex-shrink-0 leading-none" style="background:var(--accent-light);color:var(--primary);padding-bottom:2px">+</button>
+        </div>
+      `).join('');
+    }
+
+    function renderAll() {
+      renderCategories();
+      renderFeatured();
+      renderAllItems();
+      updateCartUI();
+    }
+
+    // --- CART ---
+    function getQty(id) { return cart.filter(x => x.id === id).reduce((s, c) => s + c.qty, 0); }
+    function removeFromCart(key) { cart = cart.filter(c => c.key !== key); saveCartToLS(); updateCartUI(); }
+
+    function updateCartItem(key, delta) {
+      const idx = cart.findIndex(c => c.key === key);
+      if (idx >= 0) {
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
+        saveCartToLS(); updateCartUI(); renderAll();
+      }
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((s,c) => s + c.qty, 0);
+      const badge = document.getElementById('nav-cart-badge');
+      const cartBtn = document.getElementById('nav-cart');
+      if (badge) { if(count>0){badge.textContent=count;badge.classList.remove('hidden')}else{badge.classList.add('hidden')} }
+      if (cartBtn) {
+        if(count>0){cartBtn.style.color='var(--primary)';cartBtn.style.opacity='1'}
+        else{cartBtn.style.color='var(--text-secondary)';cartBtn.style.opacity='0.4'}
+      }
+
+      const itemsEl = document.getElementById('cart-items');
+      const footerEl = document.getElementById('cart-footer');
+      const cartCount = document.getElementById('cart-count');
+      if (count>0) { cartCount.classList.remove('hidden'); cartCount.textContent='('+count+')' }
+      else { cartCount.classList.add('hidden') }
+
+      if (cart.length===0) {
+        itemsEl.innerHTML='<div class="flex flex-col items-center justify-center py-20 gap-3" style="color:var(--text-secondary);opacity:0.3"><svg class="w-14 h-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 110 4 2 2 0 010-4z"/></svg><p class="text-sm">Chưa có món nào</p></div>';
+        footerEl.classList.add('hidden'); return;
+      }
+
+      itemsEl.innerHTML = cart.map(c => {
+        const m = items.find(x=>x.id===c.id); if(!m) return '';
+        const itemPrice = m.price + (c.sizePrice||0);
+        const sizeLabel={S:'Nhỏ',M:'Vừa',L:'Lớn'}[c.size]||'';
+        return `<div class="flex gap-3 items-start p-2 -mx-2 rounded-2xl">
+          <img src="${m.img}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+          <div class="flex-1 min-w-0"><h4 class="font-semibold text-sm truncate">${m.name}</h4>
+          <div class="flex items-center gap-1.5 mt-0.5"><span class="text-xs font-bold" style="color:var(--primary)">${formatVND(itemPrice)}</span>
+          ${sizeLabel?'<span class="text-[10px] px-1.5 py-0.5 rounded-full" style="background:var(--bg-secondary);color:var(--text-secondary)">'+sizeLabel+'</span>':''}</div>
+          ${c.note?'<p class="text-[11px] mt-0.5 italic" style="color:var(--text-secondary);opacity:0.7">'+c.note+'</p>':''}</div>
+          <div class="flex items-center gap-1 rounded-xl p-0.5 flex-shrink-0" style="background:var(--bg-secondary)">
+          <button onclick="updateCartItem('${c.key}',-1)" class="w-7 h-7 flex items-center justify-center rounded-lg btn-scale text-xs font-bold" style="background:var(--surface);color:var(--text-secondary)">−</button>
+          <span class="w-6 text-center text-sm font-bold">${c.qty}</span>
+          <button onclick="updateCartItem('${c.key}',1)" class="w-7 h-7 flex items-center justify-center rounded-lg btn-scale text-xs font-bold text-white" style="background:var(--primary)">+</button></div>
+          <button onclick="removeFromCart('${c.key}')" class="p-1 btn-scale flex-shrink-0" style="color:var(--text-secondary);opacity:0.3"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`;
+      }).join('');
+
+      const subtotal = cart.reduce((s,c)=>{const m=items.find(x=>x.id===c.id);return s+(m?(m.price+(c.sizePrice||0))*c.qty:0)},0);
+      const tax = Math.round(subtotal*0.10*100)/100;
+      const total = Math.round((subtotal+tax)*100)/100;
+      document.getElementById('subtotal').textContent=formatVND(subtotal);
+      document.getElementById('vat-amount').textContent=formatVND(tax);
+      document.getElementById('total').textContent=formatVND(total);
+      footerEl.classList.remove('hidden');
+    }
+
+    function goToCheckout() {
+      const orderData=cart.map(c=>{const m=items.find(x=>x.id===c.id);return{...c,name:m.name,price:m.price,img:m.img}});
+      localStorage.setItem('orderd_cart',JSON.stringify(orderData));window.location.href='checkout.html';
+    }
+    function toggleCart() {
+      document.getElementById('cart-drawer').classList.toggle('open');
+      document.getElementById('cart-overlay').classList.toggle('open');
+      document.body.style.overflow=document.getElementById('cart-drawer').classList.contains('open')?'hidden':'';
+    }
+    function closeCart() {
+      document.getElementById('cart-drawer').classList.remove('open');
+      document.getElementById('cart-overlay').classList.remove('open');
+      document.body.style.overflow='';
+    }
+    function saveCartToLS() {
+      const data=cart.map(c=>{const m=items.find(x=>x.id===c.id);return{...c,name:m?.name,price:m?.price,img:m?.img}});
+      localStorage.setItem('orderd_cart',JSON.stringify(data));
+    }
+    function loadCartFromLS() {
+      try{const data=JSON.parse(localStorage.getItem('orderd_cart')||'[]');cart=data.map(c=>({key:c.key||c.id,id:c.id,qty:c.qty,size:c.size||'S',sizePrice:c.sizePrice||0,note:c.note||''}));}catch(e){cart=[];}
+    }
+
+    // --- PRODUCT MODAL (template/detail.html style) ---
+    let productModalItem=null; let productModalQtyVal=1; let productModalSize='S'; let productModalSizePrice=0;
+
+    function openProductModal(id) {
+      productModalItem=items.find(x=>x.id===id); if(!productModalItem)return;
+      productModalQtyVal=1; productModalSize='S'; productModalSizePrice=0;
+      document.getElementById('modal-img').src=productModalItem.img;
+      document.getElementById('modal-name').textContent=productModalItem.name;
+      document.getElementById('modal-desc').textContent=productModalItem.desc||'';
+      document.getElementById('modal-cat').textContent=catLabels[productModalItem.cat]||productModalItem.cat;
+      document.getElementById('modal-price').textContent=formatVND(productModalItem.price);
+      document.getElementById('modal-note').value='';
+
+      const sizesEl=document.getElementById('modal-sizes');
+      const sizeSection=document.getElementById('modal-size-section');
+      if(productModalItem.sizes&&productModalItem.sizes.length>1){
+        sizeSection.style.display='';
+        sizesEl.innerHTML=productModalItem.sizes.map((sz,i)=>{
+          const active=i===0;
+          return `<div class="flex flex-col items-center gap-1.5 flex-shrink-0 cursor-pointer size-chip ${active?'active':''}" data-size="${sz.size}" data-price="${sz.price}" onclick="selectSize(this)">
+            <div class="w-14 h-14 border rounded-2xl flex items-center justify-center transition-all size-icon" style="border-color:var(--border)">
+              <span class="text-xs font-bold size-text">${sz.size}</span>
+            </div>
+            <span class="text-[10px] font-semibold size-label" style="color:var(--text-secondary)">${sz.label}</span>
+          </div>`;
+        }).join('');
+        productModalSize=productModalItem.sizes[0].size;
+        productModalSizePrice=productModalItem.sizes[0].price;
+        applySizeChipStyles();
+      }else{sizeSection.style.display='none';productModalSize='S';productModalSizePrice=0;}
+      updateModalUI();
+      const modal=document.getElementById('product-modal');
+      const sheet=modal.querySelector('.modal-sheet');
+      sheet.style.overflowY='hidden';
+      modal.classList.remove('hidden','modal-close'); modal.classList.add('modal-open');
+      document.body.style.overflow='hidden';
+      sheet.scrollTop=0;
+      requestAnimationFrame(() => {
+        sheet.scrollTop=0;
+        sheet.style.overflowY='';
+      });
+    }
+
+    function closeProductModal() {
+      const modal=document.getElementById('product-modal');
+      const sheet=modal.querySelector('.modal-sheet');
+      sheet.scrollTo(0,0);
+      modal.classList.remove('modal-open'); modal.classList.add('modal-close');
+      modal.addEventListener('animationend',function h(){modal.classList.add('hidden');modal.classList.remove('modal-close');modal.removeEventListener('animationend',h);},{once:true});
+      document.body.style.overflow='';
+    }
+
+    function productModalQty(d){productModalQtyVal=Math.max(1,productModalQtyVal+d);updateModalUI();}
+
+    function selectSize(el){
+      document.querySelectorAll('.size-chip').forEach(c=>c.classList.remove('active'));
+      el.classList.add('active');
+      productModalSize=el.dataset.size; productModalSizePrice=parseInt(el.dataset.price)||0;
+      applySizeChipStyles(); updateModalUI();
+    }
+
+    function applySizeChipStyles(){
+      document.querySelectorAll('.size-chip').forEach(c=>{
+        const icon=c.querySelector('.size-icon'), label=c.querySelector('.size-label'), text=c.querySelector('.size-text');
+        if(c.classList.contains('active')){
+          icon.style.background='var(--primary)'; icon.style.borderColor='var(--primary)';
+          text.style.color='#fff'; label.style.color='var(--primary)';
+        }else{
+          icon.style.background='transparent'; icon.style.borderColor='var(--border)';
+          text.style.color='var(--text-secondary)'; label.style.color='var(--text-secondary)';
+        }
+      });
+    }
+
+    function updateModalUI(){
+      document.getElementById('modal-qty').textContent=productModalQtyVal;
+      const itemPrice=productModalItem.price+productModalSizePrice;
+      document.getElementById('modal-price').textContent=formatVND(itemPrice);
+      document.getElementById('modal-btn-price').textContent=formatVND(itemPrice*productModalQtyVal);
+    }
+
+    function addFromModal(){
+      if(!productModalItem)return;
+      const note=document.getElementById('modal-note').value.trim();
+      const key=productModalItem.id+'_'+productModalSize;
+      const idx=cart.findIndex(c=>c.key===key&&c.note===note);
+      if(idx>=0) cart[idx].qty+=productModalQtyVal;
+      else cart.push({key,id:productModalItem.id,qty:productModalQtyVal,size:productModalSize,sizePrice:productModalSizePrice,note});
+      saveCartToLS(); closeProductModal(); renderAll();
+    }
+
+    // --- NAV FAV ---
+    function toggleFav(){
+      isFav=!isFav;
+      const btn=document.getElementById('nav-fav');
+      if(isFav){btn.style.color='#ef4444';btn.style.opacity='1'}
+      else{btn.style.color='var(--text-secondary)';btn.style.opacity='0.4'}
+    }
+
+    fetchData();
+  </script>
+</body>
+</html>

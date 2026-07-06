@@ -1,0 +1,35 @@
+{
+  "catLabels": {
+    "coffee": "Cà Phê",
+    "tea": "Trà",
+    "smoothie": "Sinh Tố",
+    "juice": "Nước Ép",
+    "snack": "Ăn Nhẹ"
+  },
+  "featuredTag": "featured",
+  "items": [
+    { "id":"bac-xiu", "name":"Bạc Xỉu", "desc":"Cà phê sữa đá kiểu Sài Gòn — đậm đà, béo ngậy, ngọt dịu.", "price":35000, "cat":"coffee", "tags":["đặc trưng","featured"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000},{"size":"L","label":"Lớn","price":20000}], "img":"https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80" },
+    { "id":"cafe-sua-da", "name":"Cà Phê Sữa Đá", "desc":"Cà phê phin đậm đà cùng sữa đặc, thức uống quốc dân.", "price":30000, "cat":"coffee", "tags":["best-seller"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000},{"size":"L","label":"Lớn","price":20000}], "img":"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80" },
+    { "id":"egg-coffee", "name":"Cà Phê Trứng", "desc":"Cà phê phủ kem trứng đánh bông — béo mịn, thơm lừng kiểu Hà Nội.", "price":45000, "cat":"coffee", "tags":["featured"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":15000}], "img":"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80" },
+    { "id":"coconut-coffee", "name":"Cà Phê Cốt Dừa", "desc":"Cà phê đen hoà cùng nước cốt dừa béo — lạ miệng, cực cuốn.", "price":40000, "cat":"coffee", "tags":["lạ","featured"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000},{"size":"L","label":"Lớn","price":20000}], "img":"https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80" },
+
+    { "id":"tra-dao", "name":"Trà Đào Cam Sả", "desc":"Trà đào thơm, cam tươi, sả thanh mát — best seller mùa hè.", "price":40000, "cat":"tea", "tags":["best-seller","featured"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000},{"size":"L","label":"Lớn","price":20000}], "img":"https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80" },
+    { "id":"tra-vai", "name":"Trà Vải Thiều", "desc":"Trà xanh kết hợp vải thiều tươi, topping thạch vải giòn sần sật.", "price":35000, "cat":"tea", "tags":["ngọt"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000}], "img":"https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&q=80" },
+    { "id":"matcha-latte", "name":"Matcha Latte Đá", "desc":"Matcha Uji đánh tan cùng sữa tươi, đá — chuẩn vị Nhật.", "price":45000, "cat":"tea", "tags":["matcha","featured"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":12000},{"size":"L","label":"Lớn","price":25000}], "img":"https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=400&q=80" },
+    { "id":"tra-sen", "name":"Trà Sen Nhãn", "desc":"Trà ướp hoa sen, long nhãn ngọt thanh — nét đẹp Á Đông.", "price":35000, "cat":"tea", "tags":["truyền thống"], "sizes":[], "img":"https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&q=80" },
+
+    { "id":"sinh-to-bo", "name":"Sinh Tố Bơ", "desc":"Bơ sáp chín mềm, sữa đặc, đá xay mịn — béo ngậy khó cưỡng.", "price":40000, "cat":"smoothie", "tags":["béo","featured"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000},{"size":"L","label":"Lớn","price":20000}], "img":"https://images.unsplash.com/photo-1525385133512-2f3bdd039054?w=400&q=80" },
+    { "id":"sinh-to-xoai", "name":"Sinh Tố Xoài", "desc":"Xoài chín ngọt lịm, sữa chua, đá xay — chua ngọt hài hoà.", "price":35000, "cat":"smoothie", "tags":["nhiệt đới"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000}], "img":"https://images.unsplash.com/photo-1546173159-315724a31696?w=400&q=80" },
+    { "id":"sinh-to-dau", "name":"Sinh Tố Dâu Tây", "desc":"Dâu tươi Đà Lạt, sữa chua Hy Lạp, mật ong — healthy & ngon.", "price":45000, "cat":"smoothie", "tags":["healthy","featured"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":15000}], "img":"https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=400&q=80" },
+    { "id":"sinh-to-cacao", "name":"Sinh Tố Chuối Cacao", "desc":"Chuối tây, bột cacao nguyên chất, hạnh nhân — năng lượng cho ngày dài.", "price":40000, "cat":"smoothie", "tags":["dinh dưỡng"], "sizes":[], "img":"https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=400&q=80" },
+
+    { "id":"ep-cam", "name":"Nước Ép Cam", "desc":"Cam sành tươi vắt nguyên chất, không đường — vitamin C tự nhiên.", "price":30000, "cat":"juice", "tags":["tự nhiên"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000},{"size":"L","label":"Lớn","price":20000}], "img":"https://images.unsplash.com/photo-1613478223719-2ab802602423?w=400&q=80" },
+    { "id":"ep-dua-hau", "name":"Nước Ép Dưa Hấu", "desc":"Dưa hấu tươi mát lạnh, chút bạc hà — giải nhiệt ngày nắng.", "price":25000, "cat":"juice", "tags":["mát"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000}], "img":"https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?w=400&q=80" },
+    { "id":"detox", "name":"Detox Xanh", "desc":"Cần tây, táo xanh, gừng, chanh — thanh lọc cơ thể.", "price":35000, "cat":"juice", "tags":["detox","featured"], "sizes":[], "img":"https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?w=400&q=80" },
+    { "id":"chanh-day", "name":"Chanh Dây Mật Ong", "desc":"Chanh dây tươi, mật ong rừng, chút muối — chua ngọt đậm đà.", "price":30000, "cat":"juice", "tags":["giải khát"], "sizes":[{"size":"S","label":"Nhỏ","price":0},{"size":"M","label":"Vừa","price":10000},{"size":"L","label":"Lớn","price":20000}], "img":"https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400&q=80" },
+
+    { "id":"croissant", "name":"Croissant Bơ", "desc":"Bánh croissant Pháp bơ thơm giòn tan từng lớp.", "price":25000, "cat":"snack", "tags":["bánh"], "sizes":[], "img":"https://images.unsplash.com/photo-1623334044303-241021148842?w=400&q=80" },
+    { "id":"tiramisu", "name":"Tiramisu", "desc":"Bánh Ý cà phê mascarpone — ngọt đắng hoà quyện.", "price":45000, "cat":"snack", "tags":["featured"], "sizes":[], "img":"https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&q=80" },
+    { "id":"banh-mi-que", "name":"Bánh Mì Que Phô Mai", "desc":"Bánh mì giòn tan phủ phô mai tan chảy — ăn kèm tương ớt.", "price":20000, "cat":"snack", "tags":["mặn"], "sizes":[], "img":"https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=400&q=80" }
+  ]
+}

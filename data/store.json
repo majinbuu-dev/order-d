@@ -1,0 +1,45 @@
+{
+  "store": {
+    "name": "Oromia Coffee & Lounge",
+    "tagline": "Thưởng thức — Từng giọt đậm đà",
+    "description": "Oromia Coffee & Lounge ra đời với niềm đam mê cà phê và trà Việt. Mỗi ly đồ uống là một câu chuyện, từ hạt cà phê Tây Nguyên, lá trà Thái Nguyên cho đến trái cây nhiệt đới tươi ngon mỗi ngày.",
+    "address": "42 Tú Xương, Quận 3, TP. HCM",
+    "phone": "1900888666",
+    "openHour": 7,
+    "closeHour": 23,
+    "rating": 4.9,
+    "reviewCount": 412,
+    "ratingBreakdown": [
+      { "stars": 5, "pct": 88 },
+      { "stars": 4, "pct": 9 },
+      { "stars": 3, "pct": 2 },
+      { "stars": 2, "pct": 1 },
+      { "stars": 1, "pct": 0 }
+    ],
+    "checkinCount": "3.2k",
+    "stats": {
+      "dishCount": 20,
+      "prepTime": "5-10",
+      "tables": 12
+    },
+    "amenities": ["Wifi miễn phí", "Máy lạnh", "Ổ cắm điện", "Thanh toán thẻ", "Giao hàng tận nơi", "Chỗ để xe"],
+    "gallery": [
+      "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80",
+      "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&q=80",
+      "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80",
+      "https://images.unsplash.com/photo-1559305616-3f99cd43e353?w=400&q=80",
+      "https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400&q=80",
+      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=80"
+    ],
+    "discover": [
+      { "tag":"Món mới", "title":"Cà Phê Trứng — Đặc Sản Hà Nội Nay Có Mặt Tại Thức Quán", "time":"3 giờ trước", "views":328, "img":"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80" },
+      { "tag":"Khuyến mãi", "title":"Happy Hour 14h-16h — Giảm 30% Tất Cả Đồ Uống", "time":"1 ngày trước", "views":215, "img":"https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80" },
+      { "tag":"Sự kiện", "title":"Workshop Pha Chế Cuối Tuần — Tự Tay Làm Matcha Latte", "time":"2 ngày trước", "views":156, "img":"https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=600&q=80" }
+    ],
+    "reviews": [
+      { "initials":"MK", "name":"Minh Khôi", "stars":5, "text":"Cà phê cốt dừa siêu ngon! Không gian chill, nhân viên thân thiện. Quán ruột từ giờ luôn!", "time":"1 ngày trước" },
+      { "initials":"AT", "name":"Anh Thư", "stars":5, "text":"Matcha latte ở đây chuẩn vị Nhật. Bánh tiramisu cũng xuất sắc. Sẽ quay lại mỗi tuần!", "time":"3 ngày trước" },
+      { "initials":"BH", "name":"Bảo Hân", "stars":5, "text":"Detox xanh uống mát lành, tốt cho sức khoẻ. Quán sạch sẽ, decor xinh xỉu!", "time":"1 tuần trước" }
+    ]
+  }
+}
